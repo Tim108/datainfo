@@ -1,4 +1,8 @@
-SELECT DISTINCT name
-FROM person p, writes w, movie m, directs d
+﻿SELECT DISTINCT name
+FROM person p, writes w
 WHERE w.pid = p.pid
-AND 'p heeft een film gemaakt die niet geregisseerd is'
+AND NOT EXISTS (
+SELECT *
+FROM directs d
+WHERE d.pid = w.pid
+)
