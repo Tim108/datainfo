@@ -1,0 +1,1 @@
+﻿UPDATE Boek SET isbn=666666;
