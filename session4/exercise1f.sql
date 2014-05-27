@@ -1,0 +1,28 @@
+﻿CREATE TABLE Boek(
+isbn BIGINT UNIQUE,
+titel VARCHAR(100),
+auteur VARCHAR(100),
+PRIMARY KEY(isbn)
+);
+
+CREATE TABLE Exemplaar(
+isbn BIGINT,
+volgnummer BIGINT,
+gewicht FLOAT,
+kast BIGINT,
+FOREIGN KEY(isbn) REFERENCES Boek(isbn) ON UPDATE CASCADE ON DELETE CASCADE,
+PRIMARY KEY(isbn,volgnummer)
+);
+
+CREATE OR REPLACE FUNCTION DeleteExemp() 
+RETURNS TRIGGER
+AS $$ BEGIN
+DELETE FROM exemplaar 
+WHERE isbn = OLD.isbn;
+RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER BookDeleted AFTER DELETE ON boek
+FOR EACH ROW EXECUTE PROCEDURE DeleteExemp();
